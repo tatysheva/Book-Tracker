@@ -1,21 +1,3 @@
-const options = {
-    bottom: '600px', // default: '32px'
-    right: 'unset', // default: '32px'
-    left: '32px', // default: 'unset'
-    time: '0.3s', // default: '0.3s'
-    mixColor: '#fff', // default: '#fff'
-    backgroundColor: '#f5f5dc',  // default: '#fff'
-    buttonColorDark: '#707070',  // default: '#100f2c'
-    buttonColorLight: '#f5f5dc', // default: '#fff'
-    saveInCookies: false, // default: true,
-    label: '🌓', // default: ''
-    autoMatchOsTheme: true // default: true
-  }
-  
-  const darkmode = new Darkmode(options);
-  darkmode.showWidget();
-
-
 function main() {
     const $searchForm = document.querySelector('#search-form')
     const $searchInput = document.querySelector('#search-input')
@@ -24,6 +6,14 @@ function main() {
 
     let booksList = [];
     let myBooks = JSON.parse(localStorage.getItem('myBooks')) || [];
+    updateBooksList([
+        {key: 'mainBook1', title_suggest: "JavaScript", author_name: ["David Flanagan"], cover_i: 2536428},
+        {key: 'mainBook2', title_suggest: "The Road to React", author_name: ["Robin Wieruch"], cover_i: 9383710},
+        {key: 'mainBook3', title_suggest: "Nodejs The Right Way Practical Serverside Javascript That Scales", author_name: ["Jim Wilson"], cover_i: 7532473},
+        {key: 'mainBook4', title_suggest: "HTML and CSS",author_name: ["Jon Duckett"], cover_i: 7262081},
+        {key: 'mainBook5', title_suggest: "Sexy Web Design", author_name: ["Stocks, Elliot Jay"], cover_i: 5550387},
+        {key: 'mainBook6', title_suggest: "APIs", author_name: ["Daniel Jacobson", "Dan Woods", "Greg Brail"], cover_i: 7254443}
+    ]);
 
     function loadingSpinner() {
         $booksList.innerHTML = '<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>';
@@ -37,7 +27,6 @@ function main() {
     $searchForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         loadingSpinner();
-        $mainBook.style.display = "none";
         const response = await searchBook($searchInput.value);
         const books = response.docs.filter(doc => doc.cover_i);
         updateBooksList(books);
@@ -68,7 +57,7 @@ function main() {
     }
 
     async function searchBook(query) {
-        const response = await fetch(`http://openlibrary.org/search.json?q=${encodeURIComponent(query)}`);
+        const response = await fetch(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}`);
         return response.json();
     }
 
@@ -87,16 +76,5 @@ function main() {
       `
     }
 
-
-let mainBooks = [
-    {title_suggest: "JavaScript", author_name: ["David Flanagan"], cover_i: 2536428},
-    {title_suggest: "The Road to React", author_name: ["Robin Wieruch"], cover_i: 9383710},
-    {title_suggest: "Nodejs The Right Way Practical Serverside Javascript That Scales", author_name: ["Jim Wilson"], cover_i: 7532473},
-    {title_suggest: "HTML and CSS",author_name: ["Jon Duckett"], cover_i: 7262081},
-    {title_suggest: "Sexy Web Design", author_name: ["Stocks, Elliot Jay"], cover_i: 5550387},
-    {title_suggest: "APIs", author_name: ["Daniel Jacobson", "Dan Woods", "Greg Brail"], cover_i: 7254443}
-]
-
-$mainBook.innerHTML = renderBooksList(mainBooks);
 }
 document.addEventListener('DOMContentLoaded', main);
